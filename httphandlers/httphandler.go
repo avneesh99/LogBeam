@@ -3,6 +3,7 @@ package httphandlers
 import (
 	"bufio"
 	"context"
+	"embed"
 	"fmt"
 	"io"
 	"log"
@@ -58,8 +59,20 @@ func ContentHandler(ctx context.Context, w http.ResponseWriter, r *http.Request)
 	}
 }
 
+//go:embed index.html
+var content embed.FS
+
 func ViewHandler(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "index.html")
+	// Load the embedded index.html file
+	data, err := content.ReadFile("index.html")
+	if err != nil {
+		log.Println("Error reading embedded file:", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "text/html")
+	w.Write(data)
 }
 
 func StatsHandler(w http.ResponseWriter, r *http.Request) {
