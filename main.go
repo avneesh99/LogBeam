@@ -52,11 +52,12 @@ func main() {
 		}
 	}()
 
-	log.Printf("Server started on %s", server.Addr)
-
-	fmt.Println("Scan the QR code below to access the file:")
 	fileURL := fmt.Sprintf("http://%s:%d", localIP, randomPort)
 	viewUrl := fileURL + "/view"
+
+	log.Printf("Server started on %s", viewUrl)
+
+	fmt.Println("Scan the QR code below to access the file:")
 	qrterminal.GenerateWithConfig(viewUrl, qrterminal.Config{
 		Level:     qrterminal.L,
 		Writer:    os.Stdout,
